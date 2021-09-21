@@ -1,19 +1,20 @@
 import React, { useState } from "react";
-import data from "./data";
 function App() {
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(1);
   const [text, setText] = useState([]);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     let amount = parseInt(count);
     if (count < 0) amount = 0;
-    if (count > data.length) amount = data.length;
-    console.log("amount :", amount);
-    console.log("count :", count);
+    if (count > 100) amount = 100;
 
-    setText(data.slice(0, amount));
+    const response = await fetch(
+      `https://baconipsum.com/api/?type=meat-and-fillert&paras=${amount}`
+    );
+    const lorems = await response.json();
+    setText(lorems.slice(0, amount));
   };
 
   return (
@@ -23,6 +24,8 @@ function App() {
         <label htmlFor="amount">paragraphs:</label>
         <input
           type="number"
+          max="100"
+          min="1"
           name="amount"
           id="amount"
           value={count}
